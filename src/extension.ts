@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { scanSecrets } from './scanners/secrets';
 import { scanDangerousFunctions} from './scanners/dangerousFunctions';
+import { SecureGuardCodeActionProvider }
+	from './codeActions';
 interface Finding {
 	label: string;
 	file: vscode.Uri;
@@ -8,11 +10,66 @@ interface Finding {
 }
 export function activate(context: vscode.ExtensionContext) {
 
+	
+
 	console.log('SecureGuard activated');
 
 	vscode.window.showInformationMessage(
 		'🛡️ SecureGuard is now active!'
 	);
+
+	context.subscriptions.push(
+		vscode.languages.registerCodeActionsProvider(
+			['javascript', 'typescript'],
+			new SecureGuardCodeActionProvider()
+		)
+	);
+
+	const fixPasswordCommand =
+		vscode.commands.registerCommand(
+			'secureguard.fixPassword',
+			async () => {
+
+				const editor =
+					vscode.window.activeTextEditor;
+
+				if (!editor) {
+					return;
+				}
+
+				const lineNumber =
+					editor.selection.active.line;
+
+				const line =
+					editor.document.lineAt(lineNumber);
+
+				const edit =
+					new vscode.WorkspaceEdit();
+
+				const match =
+					line.text.match(/const\s+(\w+)\s*=/);
+
+				if (!match) {
+					return;
+				}
+
+				const variableName = match[1];
+
+				edit.replace(
+					editor.document.uri,
+					line.range,
+					`const ${variableName} = process.env.${variableName.toUpperCase()};`
+				);
+
+				await vscode.workspace.applyEdit(edit);
+
+				vscode.window.showInformationMessage(
+					'Password moved to environment variable'
+				);
+
+			}
+		);
+
 
 	const diagnosticCollection =
 		vscode.languages.createDiagnosticCollection('secureguard');
@@ -159,6 +216,10 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 		}
+	);
+	context.subscriptions.push(
+		scanWorkspaceCommand,
+		fixPasswordCommand
 	);
 }
 

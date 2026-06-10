@@ -22,6 +22,10 @@
       {
         "command": "secureguard.scanWorkspace",
         "title": "SecureGuard: Scan Workspace "
+      },
+      {
+        "command": "secureguard.fixPassword",
+        "title": "Move password to environment variable"
       }
     ]
   },
