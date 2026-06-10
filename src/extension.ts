@@ -25,10 +25,16 @@ export function activate(context: vscode.ExtensionContext) {
 
 			const line = document.lineAt(issue.line);
 
+			const severityMap = {
+				'critical': vscode.DiagnosticSeverity.Error,
+				'high': vscode.DiagnosticSeverity.Warning,
+				'medium': vscode.DiagnosticSeverity.Information
+			};
+
 			const diagnostic = new vscode.Diagnostic(
 				line.range,
 				issue.message,
-				vscode.DiagnosticSeverity.Warning
+				severityMap[issue.severity]
 			);
 
 			diagnostics.push(diagnostic);

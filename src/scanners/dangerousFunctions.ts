@@ -13,21 +13,24 @@ export function scanDangerousFunctions(
     if (/eval\s*\(/.test(line)) {
       issues.push({
         line: index,
-        message: 'Dangerous use of eval()'
+        message: 'Dangerous use of eval()',
+        severity: 'high'
       });
     }
 
     if (/exec\s*\(/.test(line)) {
       issues.push({
         line: index,
-        message: 'Dangerous use of exec()'
+        message: 'Dangerous use of exec()',
+        severity: 'high'
       });
     }
 
     if (/child_process\.exec/.test(line)) {
       issues.push({
         line: index,
-        message: 'child_process.exec detected'
+        message: 'child_process.exec detected',
+        severity: 'high'
       });
     }
 
