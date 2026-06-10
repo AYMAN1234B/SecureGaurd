@@ -18,6 +18,10 @@
       {
         "command": "secureguard.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "secureguard.scanWorkspace",
+        "title": "SecureGuard: Scan Workspace "
       }
     ]
   },

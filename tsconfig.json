@@ -9,14 +9,20 @@
     ],
     "types": [
       "node",
-	  "mocha"
+      "mocha"
     ],
     "sourceMap": true,
     "rootDir": "src",
     "strict": true
   },
+
+  "include": [
+    "src/**/*"
+  ],
+
   "exclude": [
     "node_modules",
+    "out",
     ".vscode-test"
   ]
 }

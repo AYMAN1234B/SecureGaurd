@@ -53,6 +53,54 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.activeTextEditor.document
 		);
 	}
+	const scanWorkspaceCommand = vscode.commands.registerCommand(
+		'secureguard.scanWorkspace',
+		async () => {
+
+			const files = await vscode.workspace.findFiles(
+				'**/*.{js,ts,jsx,tsx}',
+				'**/{node_modules,out,dist,.git}/**'
+			);
+
+			let critical = 0;
+			let high = 0;
+			let medium = 0;
+
+			for (const file of files) {
+
+				const document =
+					await vscode.workspace.openTextDocument(file);
+
+				const issues = [
+					...scanSecrets(document.getText()),
+					...scanDangerousFunctions(document.getText())
+				];
+
+				issues.forEach(issue => {
+
+					if (issue.severity === 'critical') {
+						critical++;
+					}
+
+					if (issue.severity === 'high') {
+						high++;
+					}
+
+					if (issue.severity === 'medium') {
+						medium++;
+					}
+
+				});
+
+			}
+
+			vscode.window.showInformationMessage(
+				`🛡️ SecureGuard Report | Critical: ${critical} | High: ${high} | Medium: ${medium}`
+			);
+
+		}
+	);
+	context.subscriptions.push(scanWorkspaceCommand);
 
 	context.subscriptions.push(
 
