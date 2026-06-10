@@ -69,6 +69,94 @@ export function activate(context: vscode.ExtensionContext) {
 
 			}
 		);
+	const fixApiKeyCommand =
+		vscode.commands.registerCommand(
+			'secureguard.fixApiKey',
+			async () => {
+
+				const editor =
+					vscode.window.activeTextEditor;
+
+				if (!editor) {
+					return;
+				}
+
+				const lineNumber =
+					editor.selection.active.line;
+
+				const line =
+					editor.document.lineAt(lineNumber);
+
+				const match =
+					line.text.match(/const\s+(\w+)\s*=/);
+
+				if (!match) {
+					return;
+				}
+
+				const variableName = match[1];
+
+				const edit =
+					new vscode.WorkspaceEdit();
+
+				edit.replace(
+					editor.document.uri,
+					line.range,
+					`const ${variableName} = process.env.${variableName.toUpperCase()};`
+				);
+
+				await vscode.workspace.applyEdit(edit);
+
+				vscode.window.showInformationMessage(
+					'API key moved to environment variable'
+				);
+
+			}
+		);
+	const fixGithubTokenCommand =
+		vscode.commands.registerCommand(
+			'secureguard.fixGithubToken',
+			async () => {
+
+				const editor =
+					vscode.window.activeTextEditor;
+
+				if (!editor) {
+					return;
+				}
+
+				const lineNumber =
+					editor.selection.active.line;
+
+				const line =
+					editor.document.lineAt(lineNumber);
+
+				const match =
+					line.text.match(/const\s+(\w+)\s*=/);
+
+				if (!match) {
+					return;
+				}
+
+				const variableName = match[1];
+
+				const edit =
+					new vscode.WorkspaceEdit();
+
+				edit.replace(
+					editor.document.uri,
+					line.range,
+					`const ${variableName} = process.env.${variableName.toUpperCase()};`
+				);
+
+				await vscode.workspace.applyEdit(edit);
+
+				vscode.window.showInformationMessage(
+					'GitHub token moved to environment variable'
+				);
+
+			}
+		);
 
 
 	const diagnosticCollection =
@@ -219,7 +307,9 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 	context.subscriptions.push(
 		scanWorkspaceCommand,
-		fixPasswordCommand
+		fixPasswordCommand,
+		fixApiKeyCommand,
+		fixGithubTokenCommand
 	);
 }
 

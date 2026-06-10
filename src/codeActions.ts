@@ -10,8 +10,10 @@ export class SecureGuardCodeActionProvider
 
 		const line = document.lineAt(range.start.line).text;
 
+		const actions: vscode.CodeAction[] = [];
+
 		if (
-			line.includes('password') &&
+			line.toLowerCase().includes('password') &&
 			line.includes('=')
 		) {
 
@@ -25,9 +27,45 @@ export class SecureGuardCodeActionProvider
 				title: 'Move password to environment variable'
 			};
 
-			return [action];
+			actions.push(action);
 		}
 
-		return [];
+		if (
+			line.toLowerCase().includes('apikey') &&
+			line.includes('=')
+		) {
+
+			const action = new vscode.CodeAction(
+				'Move API key to environment variable',
+				vscode.CodeActionKind.QuickFix
+			);
+
+			action.command = {
+				command: 'secureguard.fixApiKey',
+				title: 'Move API key to environment variable'
+			};
+
+			actions.push(action);
+		}
+
+		if (
+			line.toLowerCase().includes('token') &&
+			line.includes('ghp_')
+		) {
+
+			const action = new vscode.CodeAction(
+				'Move GitHub token to environment variable',
+				vscode.CodeActionKind.QuickFix
+			);
+
+			action.command = {
+				command: 'secureguard.fixGithubToken',
+				title: 'Move GitHub token to environment variable'
+			};
+
+			actions.push(action);
+		}
+
+		return actions;
 	}
 }

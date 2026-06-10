@@ -26,6 +26,14 @@
       {
         "command": "secureguard.fixPassword",
         "title": "Move password to environment variable"
+      },
+      {
+      "command": "secureguard.fixApiKey",
+      "title": "Move API key to environment variable"
+      },
+      {
+        "command": "secureguard.fixGithubToken",
+        "title": "Move GitHub token to environment variable"
       }
     ]
   },
