@@ -1,71 +1,35 @@
-# secureguard README
+# 🛡️ SecureGuard
 
-This is the README for your extension "secureguard". After writing up a brief description, we recommend including the following sections.
+SecureGuard is a VS Code extension that helps developers identify security issues in real time while coding.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+* Detect hardcoded passwords
+* Detect OpenAI API keys
+* Detect GitHub tokens
+* Detect dangerous functions such as `eval()`
+* Real-time warnings in the VS Code Problems panel
 
-For example if there is an image subfolder under your extension project workspace:
+## Example
 
-\!\[feature X\]\(images/feature-x.png\)
+```javascript
+const password = "admin123";
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+const apiKey = "sk-xxxxxxxxxxxxxxxxxxxxxxxx";
 
-## Requirements
+eval(userInput);
+```
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+SecureGuard will immediately flag these as potential security risks.
 
-## Extension Settings
+## Roadmap
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+* AWS key detection improvements
+* JWT token detection
+* Severity levels
+* Security sidebar
+* VS Code Marketplace release
 
-For example:
+## Installation
 
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Coming soon via the VS Code Marketplace.
