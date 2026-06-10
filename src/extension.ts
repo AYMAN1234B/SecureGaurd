@@ -74,6 +74,13 @@ export function activate(context: vscode.ExtensionContext) {
 			const findings: Finding[] = [];
 
 			for (const file of files) {
+				if (
+					file.fsPath.includes('src\\scanners') ||
+					file.fsPath.includes('out\\')
+				) {
+					continue;
+				}
+
 
 				const document =
 					await vscode.workspace.openTextDocument(file);

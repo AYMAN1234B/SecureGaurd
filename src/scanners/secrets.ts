@@ -30,13 +30,7 @@ export function scanSecrets(
       });
     }
 
-    if (/AKIA[0-9A-Z]{16}/.test(line)) {
-      issues.push({
-        line: index,
-        message: 'Possible AWS Access Key detected',
-        severity: 'critical'
-      });
-    }
+    
 
     if (/ghp_[A-Za-z0-9]{36}/.test(line)) {
       issues.push({
@@ -58,6 +52,22 @@ export function scanSecrets(
       issues.push({
         line: index,
         message: 'Possible AWS Access Key detected',
+        severity: 'critical'
+      });
+    }
+
+    if (line.includes('-----BEGIN PRIVATE KEY-----')) {
+      issues.push({
+        line: index,
+        message: 'Private Key detected',
+        severity: 'critical'
+      });
+    }
+
+    if (line.includes('-----BEGIN RSA PRIVATE KEY-----')) {
+      issues.push({
+        line: index,
+        message: 'RSA Private Key detected',
         severity: 'critical'
       });
     }
