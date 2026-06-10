@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import { scanSecrets } from './scanners/secrets';
 import { scanDangerousFunctions} from './scanners/dangerousFunctions';
+interface Finding {
+	label: string;
+	file: vscode.Uri;
+	line: number;
+}
 export function activate(context: vscode.ExtensionContext) {
 
 	console.log('SecureGuard activated');
@@ -66,6 +71,8 @@ export function activate(context: vscode.ExtensionContext) {
 			let high = 0;
 			let medium = 0;
 
+			const findings: Finding[] = [];
+
 			for (const file of files) {
 
 				const document =
@@ -90,34 +97,61 @@ export function activate(context: vscode.ExtensionContext) {
 						medium++;
 					}
 
+					findings.push({
+						label: issue.message,
+						file: file,
+						line: issue.line
+					});
+
 				});
 
 			}
 
-			vscode.window.showInformationMessage(
-				`🛡️ SecureGuard Report | Critical: ${critical} | High: ${high} | Medium: ${medium}`
+			const selected = await vscode.window.showQuickPick(
+				findings.map(f => ({
+					label: f.label,
+					description: `${f.file.fsPath}:${f.line + 1}`,
+					finding: f
+				})),
+				{
+					title: `🛡️ SecureGuard Report | Critical: ${critical} | High: ${high} | Medium: ${medium}`
+				}
 			);
 
+			if (selected) {
+
+				const document =
+					await vscode.workspace.openTextDocument(
+						selected.finding.file
+					);
+
+				const editor =
+					await vscode.window.showTextDocument(
+						document
+					);
+
+				const position =
+					new vscode.Position(
+						selected.finding.line,
+						0
+					);
+
+				editor.selection =
+					new vscode.Selection(
+						position,
+						position
+					);
+
+				editor.revealRange(
+					new vscode.Range(
+						position,
+						position
+					)
+				);
+
+			}
+
 		}
-	);
-	context.subscriptions.push(scanWorkspaceCommand);
-
-	context.subscriptions.push(
-
-		vscode.workspace.onDidChangeTextDocument(
-			(event) => {
-				scanDocument(event.document);
-			}
-		),
-
-		vscode.window.onDidChangeActiveTextEditor(
-			(editor) => {
-				if (editor) {
-					scanDocument(editor.document);
-				}
-			}
-		)
-
 	);
 }
 
