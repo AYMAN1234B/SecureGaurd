@@ -54,6 +54,14 @@ export function scanSecrets(
       });
     }
 
+    if (/AKIA[0-9A-Z]{16}/.test(line)) {
+      issues.push({
+        line: index,
+        message: 'Possible AWS Access Key detected',
+        severity: 'critical'
+      });
+    }
+
   });
 
   return issues;
