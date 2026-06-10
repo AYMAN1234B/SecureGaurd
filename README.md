@@ -4,11 +4,18 @@ SecureGuard is a VS Code extension that helps developers identify security issue
 
 ## Features
 
-* Detect hardcoded passwords
-* Detect OpenAI API keys
-* Detect GitHub tokens
-* Detect dangerous functions such as `eval()`
-* Real-time warnings in the VS Code Problems panel
+Hardcoded Password Detection
+
+- OpenAI API Key Detection
+- GitHub Token Detection
+- JWT Token Detection
+- AWS Access Key Detection
+- Private Key Detection
+- Dangerous eval() Detection
+- Dangerous exec() Detection
+- Workspace Security Scan
+- Click-to-Navigate Findings
+- Severity Levels (Critical, High, Medium)
 
 ## Example
 
