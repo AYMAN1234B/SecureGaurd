@@ -46,6 +46,14 @@ export function scanSecrets(
       });
     }
 
+    if (/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/.test(line)) {
+      issues.push({
+        line: index,
+        message: 'Possible JWT Token detected',
+        severity: 'critical'
+      });
+    }
+
   });
 
   return issues;
