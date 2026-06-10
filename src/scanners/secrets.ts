@@ -1,0 +1,47 @@
+export interface SecurityIssue {
+  line: number;
+  message: string;
+}
+
+export function scanSecrets(
+  text: string
+): SecurityIssue[] {
+
+  const issues: SecurityIssue[] = [];
+
+  const lines = text.split('\n');
+
+  lines.forEach((line, index) => {
+
+    if (/password\s*=\s*["'][^"']+["']/i.test(line)) {
+      issues.push({
+        line: index,
+        message: 'Hardcoded password detected'
+      });
+    }
+
+    if (/sk-[A-Za-z0-9]{20,}/.test(line)) {
+      issues.push({
+        line: index,
+        message: 'Possible OpenAI API Key detected'
+      });
+    }
+
+    if (/AKIA[0-9A-Z]{16}/.test(line)) {
+      issues.push({
+        line: index,
+        message: 'Possible AWS Access Key detected'
+      });
+    }
+
+    if (/ghp_[A-Za-z0-9]{36}/.test(line)) {
+      issues.push({
+        line: index,
+        message: 'Possible GitHub Token detected'
+      });
+    }
+
+  });
+
+  return issues;
+}
